@@ -1,4 +1,4 @@
-const STORAGE_KEY = "ocean-nutrition-mvp-v14";
+const STORAGE_KEY = "ocean-nutrition-mvp-v18";
 const STORAGE_PREFIX = "ocean-nutrition-mvp-";
 
 const breakfastBuilderGroups = [
@@ -80,22 +80,10 @@ const mealTemplates = [
 const defaultState = {
   role: "patient",
   section: "home",
-  selectedPatientId: "diego-ianni",
+  selectedPatientId: "",
   detail: null,
-  patients: [
-    emptyPatient({
-      id: "diego-ianni",
-      name: "Diego IANNI",
-      initials: "DI",
-      age: 34,
-      appointmentDate: "2026-05-31",
-      appointmentTime: "18:00",
-      status: "En seguimiento"
-    })
-  ],
-  plansByPatient: {
-    "diego-ianni": createBlankPlan()
-  }
+  patients: [],
+  plansByPatient: {}
 };
 
 let state = loadState();
@@ -241,6 +229,7 @@ function currentPatient() {
 
 function currentPlan() {
   const patient = currentPatient();
+  if (!patient) return createBlankPlan();
   if (!state.plansByPatient[patient.id]) state.plansByPatient[patient.id] = createBlankPlan();
   return state.plansByPatient[patient.id];
 }
@@ -253,6 +242,7 @@ function updatePatient(patientId, updater) {
 
 function updateCurrentPlan(updater) {
   const patient = currentPatient();
+  if (!patient) return;
   state.plansByPatient[patient.id] = updater(structuredClone(currentPlan()));
   saveState();
   render();
@@ -386,9 +376,9 @@ function navButton(id, label, icon) {
 
 function renderTopbar() {
   const patient = currentPatient();
-  const title = state.role === "pro" ? "Panel de nutricionista" : `Hola, ${firstName(patient.name)}`;
+  const title = state.role === "pro" ? "Panel de nutricionista" : patient ? `Hola, ${firstName(patient.name)}` : "Mi espacio Ocean";
   const subtitle = state.role === "pro"
-    ? "Turnos, pacientes, planes editables y seguimiento nutricional."
+    ? "Agenda, pacientes y seguimiento nutricional."
     : "Tu plan, registros y evolucion en un solo lugar.";
 
   return `
@@ -408,9 +398,9 @@ function renderTopbar() {
         <h1>${h(title)}</h1>
         <p class="lead">${h(subtitle)}</p>
       </div>
-      <div class="toolbar">
-        ${state.role === "pro" ? renderPatientSelect(patient) : `<span class="small-pill">${h(patient.goal || "Plan pendiente")}</span>`}
-        <button class="btn ghost mobile-logout" type="button" data-logout>Cerrar sesion</button>
+      <div class="toolbar topbar-actions">
+        ${state.role === "pro" ? renderPatientSelect(patient) : `<span class="small-pill">${h(patient?.goal || "Perfil pendiente")}</span>`}
+        <button class="session-logout" type="button" data-logout>Cerrar sesion</button>
       </div>
     </header>
   `;
@@ -418,10 +408,11 @@ function renderTopbar() {
 
 function renderPatientSelect(patient) {
   return `
-    <label class="field active-patient-field">
-      <span>Paciente activo</span>
-      <select data-patient-select>
-        ${state.patients.map(item => `<option value="${h(item.id)}" ${item.id === patient.id ? "selected" : ""}>${h(item.name)}</option>`).join("")}
+    <label class="active-patient-control">
+      <span>Paciente</span>
+      <select data-patient-select aria-label="Paciente activo">
+        <option value="" ${patient ? "" : "selected"}>Seleccionar paciente</option>
+        ${state.patients.map(item => `<option value="${h(item.id)}" ${item.id === patient?.id ? "selected" : ""}>${h(item.name)}</option>`).join("")}
       </select>
     </label>
   `;
@@ -440,7 +431,7 @@ function renderMobileNav() {
 }
 
 function renderContent() {
-  if (state.detail) return renderDetail();
+  if (state.detail && currentPatient()) return renderDetail();
   if (state.role === "pro") {
     if (state.section === "patients") return renderPatients();
     if (state.section === "plan") return renderPlan(true);
@@ -458,6 +449,7 @@ function renderContent() {
 
 function renderPatientHome() {
   const patient = currentPatient();
+  if (!patient) return renderPatientEmptyState();
   const plan = currentPlan();
   return `
     <section class="hero-band">
@@ -512,54 +504,91 @@ function renderPatientHome() {
   `;
 }
 
-function renderProHome() {
-  const patient = currentPatient();
-  const appointments = state.patients.filter(item => item.appointmentDate || item.appointmentTime);
+function renderPatientEmptyState() {
   return `
-    <section class="pro-home">
-      <div class="panel pro-home-card">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Agenda</p>
-            <h2>Proximos turnos</h2>
-            <p>Selecciona un turno para trabajar sobre ese paciente.</p>
-          </div>
-        </div>
-        <div class="stack">
-          ${appointments.length ? appointments.map(item => `
-            <button class="patient-row ${item.id === patient.id ? "active" : ""}" data-select-patient="${h(item.id)}">
-              <span class="avatar">${h(item.initials)}</span>
-              <span>
-                <strong>${h(item.name)}</strong><br>
-                <small>${h(appointmentText(item) || "Sin turno")}</small>
-              </span>
-              <span class="status-pill ok">Abrir</span>
-            </button>
-          `).join("") : `<div class="empty">Todavia no hay turnos cargados.</div>`}
-        </div>
-      </div>
-      <div class="panel pro-home-card">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Pacientes</p>
-            <h2>${h(patient.name)}</h2>
-            <p>Paciente activo seleccionado arriba. Acceso rapido a sus areas de trabajo.</p>
-          </div>
-        </div>
-        <div class="pro-patient-picker">
-          <div class="today-actions" style="margin-top: 0">
-            <button class="btn primary" data-nav="plan">Plan</button>
-            <button class="btn" data-nav="patients">Ficha</button>
-            <button class="btn" data-nav="measurements">Mediciones</button>
-          </div>
-        </div>
+    <section class="panel empty-dashboard">
+      <p class="eyebrow">Perfil del paciente</p>
+      <h2>Tu perfil todavia no esta vinculado.</h2>
+      <p class="lead">Cuando la nutricionista cree tu ficha vas a encontrar aca tu proximo turno, tu plan y tus registros.</p>
+    </section>
+  `;
+}
+
+function renderNoSelectedPatient(title) {
+  return `
+    <section class="panel empty-dashboard">
+      <p class="eyebrow">${h(title)}</p>
+      <h2>Selecciona un paciente para comenzar.</h2>
+      <p class="lead">Cuando elijas una ficha desde el selector superior vas a poder trabajar en esta seccion.</p>
+      <div class="today-actions">
+        <button class="btn primary" type="button" data-nav="patients">Ver pacientes</button>
       </div>
     </section>
   `;
 }
 
+function renderProHome() {
+  const patient = currentPatient();
+  const appointments = state.patients.filter(item => item.appointmentDate || item.appointmentTime);
+  return `
+    <section class="dashboard-home">
+      <div class="panel dashboard-card dashboard-agenda">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Agenda</p>
+            <h2>Proximos turnos</h2>
+            <p>Tu agenda inmediata de consultorio.</p>
+          </div>
+        </div>
+        <div class="appointment-list">
+          ${appointments.length ? appointments.map(item => `
+            <button class="appointment-row ${item.id === patient?.id ? "active" : ""}" data-select-patient="${h(item.id)}">
+              <span class="avatar">${h(item.initials)}</span>
+              <span class="appointment-copy">
+                <strong>${h(item.name)}</strong><br>
+                <small>${h(appointmentText(item) || "Sin turno")}</small>
+              </span>
+              <span class="status-pill ok">Abrir</span>
+            </button>
+          `).join("") : `<div class="empty compact-empty">No hay turnos proximos.</div>`}
+        </div>
+      </div>
+      <div class="panel dashboard-card dashboard-patients">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Pacientes</p>
+            <h2>${state.patients.length} ${state.patients.length === 1 ? "paciente cargado" : "pacientes cargados"}</h2>
+            <p>${patient ? `${h(patient.name)} esta seleccionado.` : "Crea o selecciona un paciente para comenzar."}</p>
+          </div>
+        </div>
+        ${state.patients.length ? "" : `<div class="empty compact-empty">Todavia no hay pacientes cargados.</div>`}
+        <div class="dashboard-actions">
+          <button class="btn primary" type="button" data-open-modal="new-patient">Nuevo paciente</button>
+          <button class="btn" type="button" data-nav="patients">Ver pacientes</button>
+        </div>
+      </div>
+    </section>
+    ${renderNewPatientModal()}
+  `;
+}
+
 function renderPatients() {
   const patient = currentPatient();
+  if (!patient) {
+    return `
+      <section class="patient-profile-page">
+        <div class="panel empty-dashboard">
+          <p class="eyebrow">Pacientes</p>
+          <h2>Todavia no hay pacientes cargados.</h2>
+          <p class="lead">Crea una ficha para comenzar a organizar agenda, plan y seguimiento.</p>
+          <div class="today-actions">
+            <button class="btn primary" type="button" data-open-modal="new-patient">Nuevo paciente</button>
+          </div>
+        </div>
+        ${renderNewPatientModal()}
+      </section>
+    `;
+  }
   return `
     <section class="patient-profile-page">
       <div class="panel patient-profile">
@@ -732,6 +761,36 @@ function renderPatients() {
   `;
 }
 
+function renderNewPatientModal() {
+  return renderAppModal("new-patient", "Agregar paciente", `
+    <form class="form-grid" data-new-patient-form>
+      <label class="field full">
+        <span>Nombre y apellido</span>
+        <input name="name" required />
+      </label>
+      <label class="field">
+        <span>Edad</span>
+        <input name="age" type="number" />
+      </label>
+      <label class="field">
+        <span>Telefono</span>
+        <input name="phone" type="tel" />
+      </label>
+      <label class="field">
+        <span>Fecha del proximo turno</span>
+        <input name="appointmentDate" type="date" />
+      </label>
+      <label class="field">
+        <span>Hora</span>
+        <select name="appointmentTime">${hourOptions()}</select>
+      </label>
+      <div class="form-actions full">
+        <button class="btn primary" type="submit">Agregar paciente</button>
+      </div>
+    </form>
+  `);
+}
+
 function patientDatum(label, value) {
   return `<div class="patient-datum"><span>${h(label)}</span><strong>${h(value)}</strong></div>`;
 }
@@ -760,6 +819,7 @@ function renderAppModal(id, title, body) {
 
 function renderPlan(isPro) {
   const patient = currentPatient();
+  if (!patient) return isPro ? renderNoSelectedPatient("Plan alimentario") : renderPatientEmptyState();
   const plan = currentPlan();
   if (isPro) {
     return `
@@ -883,6 +943,7 @@ function renderMealArt(meal) {
 
 function renderRecords(isPro) {
   const patient = currentPatient();
+  if (!patient) return isPro ? renderNoSelectedPatient("Registros") : renderPatientEmptyState();
   return `
     <section class="grid sidebar-main">
       ${isPro ? `
@@ -930,6 +991,7 @@ function renderRecords(isPro) {
 
 function renderMeasurements(isPro) {
   const patient = currentPatient();
+  if (!patient) return isPro ? renderNoSelectedPatient("Mediciones") : renderPatientEmptyState();
   return `
     <section class="grid sidebar-main">
       <div class="panel">
@@ -1733,6 +1795,7 @@ function display(value, unit = "") {
 }
 
 function appointmentText(patient) {
+  if (!patient) return "";
   if (!patient.appointmentDate && !patient.appointmentTime) return "";
   const date = patient.appointmentDate ? dateText(patient.appointmentDate) : "Sin fecha";
   const time = patient.appointmentTime ? patient.appointmentTime : "sin hora";

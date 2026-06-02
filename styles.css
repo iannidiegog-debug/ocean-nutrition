@@ -316,7 +316,7 @@ button {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 16px;
   align-items: center;
-  padding: 0 0 22px;
+  padding: 0 0 20px;
   background: linear-gradient(180deg, rgba(246, 250, 251, 0.98) 74%, rgba(246, 250, 251, 0));
 }
 
@@ -371,8 +371,46 @@ h3 {
   justify-content: flex-end;
 }
 
-.active-patient-field {
-  min-width: 220px;
+.topbar-actions {
+  flex-wrap: nowrap;
+}
+
+.active-patient-control {
+  min-width: 238px;
+  display: grid;
+  gap: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  padding: 7px 10px;
+  box-shadow: 0 5px 16px rgba(9, 77, 101, 0.055);
+}
+
+.active-patient-control span {
+  color: var(--ocean-700);
+  font-size: 10px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.active-patient-control select {
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  outline: 0;
+  font-size: 13px;
+  font-weight: 780;
+}
+
+.session-logout {
+  min-height: 34px;
+  border: 0;
+  background: transparent;
+  color: var(--ocean-800);
+  padding: 5px 2px;
+  font-size: 12px;
+  font-weight: 820;
 }
 
 .mobile-context-row {
@@ -441,11 +479,11 @@ h3 {
 }
 
 .panel {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid #d4e5e8;
   border-radius: 8px;
   padding: 20px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 10px 30px rgba(9, 77, 101, 0.085);
 }
 
 .panel.compact {
@@ -524,23 +562,84 @@ button.metric {
 
 .pro-plan-page,
 .meal-editor-page,
-.pro-home {
+.pro-home,
+.dashboard-home {
   display: grid;
   gap: 16px;
 }
 
-.pro-home {
+.pro-home,
+.dashboard-home {
   grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
   align-items: start;
 }
 
-.pro-home-card {
-  min-height: 270px;
+.dashboard-card {
+  min-height: 238px;
 }
 
+.dashboard-patients {
+  display: grid;
+  align-content: start;
+}
+
+.appointment-list,
 .pro-patient-picker {
   display: grid;
-  gap: 14px;
+  gap: 9px;
+}
+
+.appointment-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 11px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfefe;
+  padding: 11px;
+  color: var(--ink);
+  text-align: left;
+}
+
+.appointment-row.active {
+  border-color: rgba(10, 168, 180, 0.62);
+  box-shadow: inset 4px 0 0 var(--ocean-600);
+}
+
+.appointment-copy {
+  min-width: 0;
+}
+
+.appointment-copy strong,
+.appointment-copy small {
+  overflow-wrap: anywhere;
+}
+
+.appointment-copy small {
+  color: var(--muted);
+}
+
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.compact-empty {
+  padding: 13px;
+  line-height: 1.45;
+}
+
+.empty-dashboard {
+  max-width: 740px;
+  padding: 28px;
+}
+
+.empty-dashboard h2 {
+  margin-bottom: 8px;
 }
 
 .plan-board {
@@ -1728,7 +1827,7 @@ button.metric {
   }
 
   .main {
-    padding: 14px 14px 92px;
+    padding: 13px 14px 98px;
   }
 
   .mobile-brand {
@@ -1738,7 +1837,8 @@ button.metric {
   .topbar {
     position: static;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 9px;
+    padding-bottom: 15px;
   }
 
   .toolbar {
@@ -1746,13 +1846,17 @@ button.metric {
     justify-content: flex-start;
   }
 
-  .active-patient-field {
-    width: min(100%, 360px);
+  .topbar-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .active-patient-control {
+    width: 100%;
     min-width: 0;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.88);
-    padding: 10px;
+    padding: 6px 9px;
   }
 
   .mobile-back {
@@ -1770,29 +1874,21 @@ button.metric {
     font-size: 12px;
   }
 
-  .mobile-logout {
-    display: inline-flex;
-    min-height: 34px;
-    padding: 7px 0;
-    border: 0;
-    color: var(--ocean-800);
-    font-size: 12px;
-  }
-
   .mobile-nav {
     position: fixed;
-    left: 10px;
-    right: 10px;
-    bottom: max(8px, env(safe-area-inset-bottom));
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 30;
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 2px;
-    padding: 5px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.96);
-    box-shadow: var(--shadow);
+    padding: 6px 5px max(6px, env(safe-area-inset-bottom));
+    border: 0;
+    border-top: 1px solid var(--line);
+    border-radius: 0;
+    background: rgba(255, 255, 255, 0.985);
+    box-shadow: 0 -8px 24px rgba(9, 77, 101, 0.08);
   }
 
   .mobile-nav button {
@@ -1800,10 +1896,10 @@ button.metric {
     padding: 0 1px;
     border: 0;
     border-radius: 6px;
-    min-height: 48px;
+    min-height: 50px;
     background: transparent;
     color: var(--muted);
-    font-size: 9px;
+    font-size: 9.5px;
     font-weight: 820;
     line-height: 1.05;
   }
@@ -1815,7 +1911,7 @@ button.metric {
 
   .mobile-nav span {
     display: block;
-    font-size: 17px;
+    font-size: 18px;
     line-height: 1;
     margin-bottom: 3px;
   }
@@ -1828,6 +1924,7 @@ button.metric {
   .hero-band,
   .summary-strip,
   .pro-home,
+  .dashboard-home,
   .patient-profile-grid {
     grid-template-columns: 1fr;
   }
@@ -1924,18 +2021,66 @@ button.metric {
   .main {
     padding-left: 10px;
     padding-right: 10px;
+    padding-bottom: 100px;
   }
 
   .topbar {
-    padding-bottom: 12px;
+    padding-bottom: 11px;
   }
 
   h1 {
-    font-size: 25px;
+    font-size: 23px;
+  }
+
+  .mobile-brand {
+    gap: 9px;
+  }
+
+  .mobile-brand img {
+    width: 39px;
+    height: 39px;
+  }
+
+  .mobile-brand .brand-title {
+    font-size: 18px;
+  }
+
+  .mobile-brand .brand-subtitle {
+    margin-top: 3px;
+    font-size: 9px;
+  }
+
+  .topbar > div:first-child > .lead {
+    display: none;
+  }
+
+  .mobile-context-row {
+    margin-top: 7px;
+  }
+
+  .mobile-context-row .eyebrow {
+    margin-bottom: 3px;
+    font-size: 10px;
   }
 
   .panel {
     padding: 14px;
+  }
+
+  .dashboard-card {
+    min-height: 0;
+  }
+
+  .dashboard-actions .btn {
+    flex: 1 1 132px;
+  }
+
+  .empty-dashboard {
+    padding: 18px;
+  }
+
+  .appointment-row {
+    padding: 10px;
   }
 
   .form-card {
