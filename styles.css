@@ -48,6 +48,118 @@ button {
   min-height: 100vh;
 }
 
+.login-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(460px, 1.1fr);
+}
+
+.login-brand-panel {
+  min-height: 100vh;
+  display: grid;
+  align-content: space-between;
+  gap: 34px;
+  padding: 42px;
+  color: white;
+  background:
+    linear-gradient(145deg, rgba(7, 76, 112, 0.97), rgba(7, 111, 130, 0.9)),
+    var(--ocean-800);
+}
+
+.login-brand img {
+  width: 64px;
+  height: 64px;
+}
+
+.login-brand-copy {
+  max-width: 560px;
+}
+
+.login-brand-copy .eyebrow,
+.login-brand-copy p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.login-brand-copy h1 {
+  max-width: 12ch;
+  color: white;
+  font-size: 50px;
+}
+
+.login-brand-copy p:last-child {
+  max-width: 54ch;
+  line-height: 1.6;
+}
+
+.login-form-panel {
+  display: grid;
+  place-items: center;
+  padding: 34px;
+}
+
+.login-box {
+  width: min(620px, 100%);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  box-shadow: var(--shadow);
+}
+
+.login-role-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.login-role-card {
+  min-height: 138px;
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfefe;
+  padding: 16px;
+  color: var(--ink);
+  text-align: left;
+}
+
+.login-role-card.active {
+  border-color: var(--ocean-600);
+  background: var(--ocean-100);
+  box-shadow: inset 4px 0 0 var(--ocean-600);
+}
+
+.login-role-card small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.login-role-icon {
+  color: var(--ocean-700);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.login-form {
+  display: grid;
+  gap: 14px;
+}
+
+.login-submit {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.login-demo-note {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .layout {
   min-height: 100vh;
   display: grid;
@@ -102,6 +214,33 @@ button {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-session {
+  display: grid;
+  gap: 5px;
+  margin: 24px 0 18px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-session span {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.sidebar-session button {
+  justify-self: start;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  padding: 4px 0 0;
+  font-size: 12px;
+  font-weight: 760;
 }
 
 .role-switch button,
@@ -230,6 +369,25 @@ h3 {
   gap: 10px;
   flex-wrap: wrap;
   justify-content: flex-end;
+}
+
+.active-patient-field {
+  min-width: 220px;
+}
+
+.mobile-context-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-context-row .eyebrow {
+  margin-bottom: 5px;
+}
+
+.mobile-back,
+.mobile-logout {
+  display: none;
 }
 
 .btn,
@@ -1548,6 +1706,19 @@ button.metric {
 }
 
 @media (max-width: 1040px) {
+  .login-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .login-brand-panel {
+    min-height: auto;
+    padding: 24px;
+  }
+
+  .login-brand-copy {
+    display: none;
+  }
+
   .layout {
     grid-template-columns: 1fr;
   }
@@ -1565,30 +1736,55 @@ button.metric {
   }
 
   .topbar {
+    position: static;
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .toolbar {
+    width: 100%;
     justify-content: flex-start;
   }
 
-  .mobile-role {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4px;
-    padding: 4px;
+  .active-patient-field {
+    width: min(100%, 360px);
+    min-width: 0;
     border: 1px solid var(--line);
     border-radius: 8px;
-    background: white;
+    background: rgba(255, 255, 255, 0.88);
+    padding: 10px;
+  }
+
+  .mobile-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 0;
+    background: transparent;
     color: var(--ocean-800);
+    padding: 0;
+    font-weight: 820;
+  }
+
+  .mobile-back span {
+    font-size: 12px;
+  }
+
+  .mobile-logout {
+    display: inline-flex;
+    min-height: 34px;
+    padding: 7px 0;
+    border: 0;
+    color: var(--ocean-800);
+    font-size: 12px;
   }
 
   .mobile-nav {
     position: fixed;
     left: 10px;
     right: 10px;
-    bottom: 10px;
-    z-index: 10;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    z-index: 30;
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 2px;
@@ -1640,7 +1836,7 @@ button.metric {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .pro-meal-grid {
+  .meal-grid.pro-meal-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1706,6 +1902,25 @@ button.metric {
 }
 
 @media (max-width: 540px) {
+  .login-form-panel {
+    place-items: start center;
+    padding: 14px 10px 28px;
+  }
+
+  .login-box {
+    padding: 18px 14px;
+  }
+
+  .login-role-grid {
+    gap: 8px;
+    margin: 18px 0;
+  }
+
+  .login-role-card {
+    min-height: 124px;
+    padding: 12px;
+  }
+
   .main {
     padding-left: 10px;
     padding-right: 10px;
@@ -1735,9 +1950,43 @@ button.metric {
     grid-template-columns: 1fr;
   }
 
-  .pro-meal-grid,
+  .meal-grid.pro-meal-grid,
   .patient-data-grid {
     grid-template-columns: 1fr;
+  }
+
+  .meal-card {
+    min-height: 156px;
+    grid-template-columns: 112px minmax(0, 1fr);
+    grid-template-rows: 1fr;
+  }
+
+  .meal-card-body {
+    min-width: 0;
+    padding: 11px;
+    gap: 7px;
+  }
+
+  .meal-title-row {
+    gap: 6px;
+  }
+
+  .meal-title-row h3 {
+    font-size: 15px;
+  }
+
+  .meal-time {
+    margin-top: 4px;
+    font-size: 11px;
+  }
+
+  .meal-card .lead {
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .meal-actions {
+    margin-top: 4px;
   }
 
   .patient-datum {
@@ -1754,7 +2003,8 @@ button.metric {
   }
 
   .meal-art {
-    min-height: 126px;
+    min-height: 100%;
+    height: 100%;
   }
 
   .timeline-item {

@@ -6,6 +6,7 @@ MVP web para Ocean Centro de Salud. Permite recorrer la experiencia del paciente
 
 - Vista de paciente con inicio, plan, registros, mediciones, contacto, turnos y material educativo reservado.
 - Vista de nutricionista con pacientes, ficha, nuevos pacientes, mediciones profesionales, ajustes del plan y contacto.
+- Pantalla inicial de acceso demostrativo con perfiles separados para paciente y nutricionista.
 - Plan de alimentacion editable por paciente, con comidas por horario, alimentos recomendados, suplementos y medicacion.
 - Metodo del plato solo aplicado donde corresponde: almuerzo y cena.
 - Guardado local en el navegador para registros, mediciones, mensajes, notas, pacientes y planes.

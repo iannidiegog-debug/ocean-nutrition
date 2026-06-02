@@ -99,6 +99,9 @@ const defaultState = {
 };
 
 let state = loadState();
+let sessionRole = null;
+let pendingLoginRole = "patient";
+let navigationHistory = [];
 
 function emptyPatient(seed = {}) {
   return {
@@ -204,6 +207,34 @@ function setState(patch) {
   window.scrollTo(0, 0);
 }
 
+function currentLocation() {
+  return { section: state.section, detail: state.detail };
+}
+
+function rememberLocation() {
+  const current = currentLocation();
+  const previous = navigationHistory[navigationHistory.length - 1];
+  if (!previous || previous.section !== current.section || previous.detail !== current.detail) {
+    navigationHistory.push(current);
+  }
+}
+
+function navigateTo(section) {
+  if (state.section === section && !state.detail) return;
+  rememberLocation();
+  setState({ section, detail: null });
+}
+
+function openDetail(detail) {
+  rememberLocation();
+  setState({ detail });
+}
+
+function navigateBack() {
+  const previous = navigationHistory.pop();
+  setState(previous || { section: "home", detail: null });
+}
+
 function currentPatient() {
   return state.patients.find(patient => patient.id === state.selectedPatientId) || state.patients[0];
 }
@@ -248,6 +279,11 @@ function navItems() {
 }
 
 function render() {
+  if (!sessionRole) {
+    document.querySelector("#app").innerHTML = renderLogin();
+    bindLoginEvents();
+    return;
+  }
   document.querySelector("#app").innerHTML = `
     <div class="layout">
       ${renderSidebar()}
@@ -261,6 +297,59 @@ function render() {
   bindEvents();
 }
 
+function renderLogin() {
+  const isPatient = pendingLoginRole === "patient";
+  return `
+    <main class="login-shell">
+      <section class="login-brand-panel">
+        <div class="brand login-brand">
+          <img src="./assets/ocean-blue.jpeg" alt="Ocean Centro de Salud" />
+          <div>
+            <div class="brand-title">Ocean</div>
+            <div class="brand-subtitle">Centro de Salud</div>
+          </div>
+        </div>
+        <div class="login-brand-copy">
+          <p class="eyebrow">Nutricion y seguimiento</p>
+          <h1>Tu espacio de salud, ordenado y accesible.</h1>
+          <p>Planes alimentarios, turnos, mediciones y seguimiento en un entorno pensado para cada perfil.</p>
+        </div>
+      </section>
+      <section class="login-form-panel">
+        <div class="login-box">
+          <p class="eyebrow">Acceso a Ocean</p>
+          <h2>Iniciar sesion</h2>
+          <p class="lead">Selecciona tu tipo de acceso para ingresar a tu espacio.</p>
+          <div class="login-role-grid" role="group" aria-label="Tipo de acceso">
+            <button class="login-role-card ${isPatient ? "active" : ""}" type="button" data-login-role="patient">
+              <span class="login-role-icon">◎</span>
+              <strong>Paciente</strong>
+              <small>Plan, turnos y registros personales</small>
+            </button>
+            <button class="login-role-card ${!isPatient ? "active" : ""}" type="button" data-login-role="pro">
+              <span class="login-role-icon">▤</span>
+              <strong>Nutricionista</strong>
+              <small>Pacientes, agenda y seguimiento</small>
+            </button>
+          </div>
+          <form class="login-form" data-login-form>
+            <label class="field">
+              <span>Correo electronico</span>
+              <input type="email" autocomplete="email" placeholder="${isPatient ? "paciente@correo.com" : "nutricionista@ocean.com"}" />
+            </label>
+            <label class="field">
+              <span>Contrasena</span>
+              <input type="password" autocomplete="current-password" placeholder="Ingresa tu contrasena" />
+            </label>
+            <button class="btn primary login-submit" type="submit">Ingresar como ${isPatient ? "paciente" : "nutricionista"}</button>
+          </form>
+          <p class="login-demo-note">Acceso demostrativo. La validacion segura de usuarios se conecta en la etapa de nube.</p>
+        </div>
+      </section>
+    </main>
+  `;
+}
+
 function renderSidebar() {
   return `
     <aside class="sidebar">
@@ -271,9 +360,10 @@ function renderSidebar() {
           <div class="brand-subtitle">Centro de Salud</div>
         </div>
       </div>
-      <div class="role-switch" data-role-switch>
-        <button class="${state.role === "patient" ? "active" : ""}" data-role="patient">Paciente</button>
-        <button class="${state.role === "pro" ? "active" : ""}" data-role="pro">Nutri</button>
+      <div class="sidebar-session">
+        <span>Sesion activa</span>
+        <strong>${state.role === "pro" ? "Nutricionista" : "Paciente"}</strong>
+        <button type="button" data-logout>Cerrar sesion</button>
       </div>
       <nav class="nav-list">
         ${navItems().map(([id, label, icon]) => navButton(id, label, icon)).join("")}
@@ -311,16 +401,16 @@ function renderTopbar() {
             <div class="brand-subtitle">Centro de Salud</div>
           </div>
         </div>
-        <p class="eyebrow">${state.role === "pro" ? "Consultorio" : "Perfil del paciente"}</p>
+        <div class="mobile-context-row">
+          ${state.section !== "home" || state.detail ? `<button class="mobile-back" type="button" data-go-back>‹ <span>Volver</span></button>` : ""}
+          <p class="eyebrow">${state.role === "pro" ? "Consultorio" : "Perfil del paciente"}</p>
+        </div>
         <h1>${h(title)}</h1>
         <p class="lead">${h(subtitle)}</p>
       </div>
       <div class="toolbar">
-        <div class="mobile-role" data-role-switch>
-          <button class="${state.role === "patient" ? "active" : ""}" data-role="patient">Paciente</button>
-          <button class="${state.role === "pro" ? "active" : ""}" data-role="pro">Nutri</button>
-        </div>
         ${state.role === "pro" ? renderPatientSelect(patient) : `<span class="small-pill">${h(patient.goal || "Plan pendiente")}</span>`}
+        <button class="btn ghost mobile-logout" type="button" data-logout>Cerrar sesion</button>
       </div>
     </header>
   `;
@@ -328,7 +418,7 @@ function renderTopbar() {
 
 function renderPatientSelect(patient) {
   return `
-    <label class="field" style="min-width: 220px">
+    <label class="field active-patient-field">
       <span>Paciente activo</span>
       <select data-patient-select>
         ${state.patients.map(item => `<option value="${h(item.id)}" ${item.id === patient.id ? "selected" : ""}>${h(item.name)}</option>`).join("")}
@@ -1295,12 +1385,8 @@ function measurementRow(item) {
 }
 
 function bindEvents() {
-  document.querySelectorAll("[data-role]").forEach(button => {
-    button.addEventListener("click", () => setState({ role: button.dataset.role, section: "home", detail: null }));
-  });
-
   document.querySelectorAll("[data-nav]").forEach(button => {
-    button.addEventListener("click", () => setState({ section: button.dataset.nav, detail: null }));
+    button.addEventListener("click", () => navigateTo(button.dataset.nav));
   });
 
   document.querySelectorAll("[data-select-patient]").forEach(button => {
@@ -1311,11 +1397,20 @@ function bindEvents() {
   if (select) select.addEventListener("change", event => setState({ selectedPatientId: event.target.value, detail: null }));
 
   document.querySelectorAll("[data-meal-detail]").forEach(button => {
-    button.addEventListener("click", () => setState({ detail: button.dataset.mealDetail }));
+    button.addEventListener("click", () => openDetail(button.dataset.mealDetail));
   });
 
-  document.querySelectorAll("[data-back]").forEach(button => {
-    button.addEventListener("click", () => setState({ detail: null }));
+  document.querySelectorAll("[data-back], [data-go-back]").forEach(button => {
+    button.addEventListener("click", navigateBack);
+  });
+
+  document.querySelectorAll("[data-logout]").forEach(button => {
+    button.addEventListener("click", () => {
+      sessionRole = null;
+      pendingLoginRole = "patient";
+      navigationHistory = [];
+      render();
+    });
   });
 
   bindRecordForm();
@@ -1326,6 +1421,24 @@ function bindEvents() {
   bindPatientForms();
   bindChooserModals();
   bindAppModals();
+}
+
+function bindLoginEvents() {
+  document.querySelectorAll("[data-login-role]").forEach(button => {
+    button.addEventListener("click", () => {
+      pendingLoginRole = button.dataset.loginRole;
+      render();
+    });
+  });
+
+  const form = document.querySelector("[data-login-form]");
+  if (!form) return;
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    sessionRole = pendingLoginRole;
+    navigationHistory = [];
+    setState({ role: sessionRole, section: "home", detail: null });
+  });
 }
 
 function bindRecordForm() {
