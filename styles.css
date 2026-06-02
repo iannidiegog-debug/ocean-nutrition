@@ -1176,6 +1176,10 @@ button.metric {
   gap: 14px;
 }
 
+.meal-grid.pro-meal-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .meal-card {
   overflow: hidden;
   padding: 0;
