@@ -2370,3 +2370,790 @@ button.metric {
     grid-template-columns: 1fr;
   }
 }
+
+/* Ocean Health-Tech Premium UI */
+:root {
+  --ocean-900: #071d26;
+  --ocean-800: #0b2a36;
+  --ocean-700: #155e72;
+  --ocean-600: #35c8d4;
+  --ocean-500: #74e6ea;
+  --ocean-100: rgba(53, 200, 212, 0.14);
+  --ink: #f4fbfc;
+  --muted: #b7d3da;
+  --soft: #7fa6af;
+  --line: rgba(116, 230, 234, 0.18);
+  --active-line: rgba(116, 230, 234, 0.55);
+  --page: #071d26;
+  --surface: rgba(10, 45, 58, 0.88);
+  --surface-strong: rgba(13, 72, 86, 0.92);
+  --ok: #5ee6a8;
+  --danger: #ff6b6b;
+  --warn: #ffd48a;
+  --shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+  font-family: "Manrope", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink);
+}
+
+* {
+  scrollbar-color: rgba(116, 230, 234, 0.34) rgba(4, 23, 31, 0.45);
+}
+
+html {
+  background: #061820;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+body {
+  color: var(--ink);
+  font-family: "Manrope", Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  background:
+    radial-gradient(circle at top left, rgba(53, 200, 212, 0.20), transparent 32%),
+    radial-gradient(circle at 82% 18%, rgba(116, 230, 234, 0.12), transparent 24%),
+    radial-gradient(circle at 48% 92%, rgba(21, 94, 114, 0.24), transparent 30%),
+    linear-gradient(180deg, #0b3342 0%, #071d26 45%, #061820 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(116, 230, 234, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(116, 230, 234, 0.025) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.65), transparent 72%);
+}
+
+button,
+.btn,
+.login-role-card,
+.patient-row,
+.appointment-row,
+.meal-card,
+.toolkit-card,
+.builder-tile {
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease, filter 180ms ease, color 180ms ease;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 4px rgba(53, 200, 212, 0.16);
+  border-color: var(--active-line);
+}
+
+.app-shell,
+.layout,
+.login-shell {
+  min-height: 100svh;
+}
+
+.login-shell {
+  grid-template-columns: minmax(320px, 0.88fr) minmax(460px, 1.12fr);
+  background:
+    radial-gradient(circle at 20% 18%, rgba(116, 230, 234, 0.18), transparent 28%),
+    linear-gradient(135deg, rgba(7, 29, 38, 0.1), rgba(6, 24, 32, 0.55));
+}
+
+.login-brand-panel {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(28px, 4vw, 52px);
+  background:
+    radial-gradient(circle at 14% 18%, rgba(116, 230, 234, 0.18), transparent 26%),
+    linear-gradient(160deg, rgba(11, 51, 66, 0.74), rgba(8, 36, 48, 0.84));
+  border-right: 1px solid var(--line);
+}
+
+.login-brand-panel::after {
+  content: "";
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  right: -190px;
+  bottom: -170px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(53, 200, 212, 0.18), transparent 66%);
+}
+
+.brand img,
+.login-brand img,
+.mobile-brand img {
+  background: rgba(244, 251, 252, 0.92);
+  box-shadow: 0 0 0 1px rgba(116, 230, 234, 0.18), 0 12px 34px rgba(53, 200, 212, 0.18);
+}
+
+.brand-title {
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.brand-subtitle {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.login-brand-copy h1 {
+  max-width: 12ch;
+  font-size: clamp(44px, 6vw, 66px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+}
+
+.login-brand-copy p:last-child {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.login-form-panel {
+  padding: clamp(18px, 5vw, 54px);
+  background:
+    radial-gradient(circle at 70% 22%, rgba(53, 200, 212, 0.13), transparent 30%),
+    rgba(5, 24, 33, 0.36);
+}
+
+.login-box {
+  position: relative;
+  width: min(640px, 100%);
+  overflow: hidden;
+  border-radius: 24px;
+  padding: clamp(22px, 3vw, 34px);
+  background: linear-gradient(180deg, rgba(10, 45, 58, 0.92), rgba(7, 29, 38, 0.92));
+  border: 1px solid rgba(116, 230, 234, 0.2);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(18px);
+}
+
+.login-box::before,
+.panel::before,
+.chooser-dialog::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(116, 230, 234, 0.18), transparent 32%, rgba(244, 251, 252, 0.035));
+  opacity: 0.8;
+}
+
+.login-box > *,
+.panel > *,
+.chooser-dialog > * {
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  color: var(--ocean-500);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.login-box > .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  border: 1px solid rgba(116, 230, 234, 0.18);
+  border-radius: 999px;
+  background: rgba(53, 200, 212, 0.1);
+  padding: 6px 10px;
+}
+
+h1 {
+  color: var(--ink);
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+}
+
+h2 {
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.18;
+}
+
+h3 {
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.lead,
+.login-demo-note,
+.section-heading p {
+  color: var(--muted);
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.login-role-grid {
+  gap: 14px;
+}
+
+.login-role-card {
+  min-height: 104px;
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(4, 23, 31, 0.72);
+  border: 1px solid rgba(183, 211, 218, 0.13);
+  box-shadow: inset 0 1px 0 rgba(244, 251, 252, 0.03);
+}
+
+.login-role-card:hover,
+.login-role-card:active,
+.patient-row:hover,
+.appointment-row:hover,
+.meal-card:hover,
+.builder-tile:hover,
+.toolkit-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(116, 230, 234, 0.38);
+}
+
+.login-role-card.active {
+  background:
+    radial-gradient(circle at top left, rgba(116, 230, 234, 0.22), transparent 44%),
+    linear-gradient(135deg, rgba(21, 94, 114, 0.95), rgba(11, 42, 54, 0.95));
+  border-color: rgba(116, 230, 234, 0.58);
+  box-shadow: 0 18px 38px rgba(53, 200, 212, 0.12), inset 0 0 0 1px rgba(116, 230, 234, 0.08);
+}
+
+.login-role-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(116, 230, 234, 0.12);
+  color: var(--ocean-500);
+  font-size: 19px;
+}
+
+.login-role-card strong {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.login-role-card small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.field {
+  gap: 8px;
+}
+
+.field label,
+.field > span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea,
+.field select {
+  min-height: 48px;
+  border-radius: 14px;
+  padding: 0 14px;
+  background: rgba(4, 23, 31, 0.78);
+  border: 1px solid rgba(183, 211, 218, 0.14);
+  color: var(--ink);
+  box-shadow: inset 0 1px 0 rgba(244, 251, 252, 0.02);
+}
+
+.field textarea {
+  min-height: 112px;
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  background: rgba(4, 23, 31, 0.9);
+  border-color: rgba(116, 230, 234, 0.75);
+  box-shadow: 0 0 0 4px rgba(53, 200, 212, 0.12);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--soft);
+}
+
+.btn,
+.icon-btn,
+.session-logout {
+  min-height: 44px;
+  border-radius: 14px;
+  font-weight: 800;
+}
+
+.btn {
+  background: rgba(244, 251, 252, 0.045);
+  border: 1px solid rgba(116, 230, 234, 0.18);
+  color: var(--ocean-500);
+  box-shadow: none;
+}
+
+.btn:hover,
+.btn:active,
+.session-logout:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+}
+
+.btn.primary {
+  position: relative;
+  overflow: hidden;
+  height: 48px;
+  border: 0;
+  background: linear-gradient(135deg, #35c8d4 0%, #74e6ea 100%);
+  color: #06202b;
+  box-shadow: 0 12px 28px rgba(53, 200, 212, 0.28);
+}
+
+.btn.primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-130%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.32), transparent);
+  transition: transform 520ms ease;
+}
+
+.btn.primary:hover::after {
+  transform: translateX(130%);
+}
+
+.btn.ghost {
+  color: var(--ocean-500);
+  background: rgba(116, 230, 234, 0.045);
+}
+
+.btn.danger {
+  color: #ffe2e2;
+  border-color: rgba(255, 107, 107, 0.34);
+  background: rgba(255, 107, 107, 0.12);
+}
+
+.layout {
+  grid-template-columns: 276px minmax(0, 1fr);
+}
+
+.sidebar {
+  padding: 24px 18px;
+  background:
+    radial-gradient(circle at top left, rgba(53, 200, 212, 0.13), transparent 30%),
+    linear-gradient(180deg, rgba(4, 23, 31, 0.94), rgba(7, 29, 38, 0.96));
+  border-right: 1px solid rgba(116, 230, 234, 0.13);
+}
+
+.sidebar-session {
+  border-radius: 18px;
+  border-color: rgba(116, 230, 234, 0.16);
+  background: rgba(116, 230, 234, 0.06);
+}
+
+.nav-list {
+  gap: 8px;
+}
+
+.nav-button {
+  min-height: 48px;
+  border-radius: 16px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.nav-button:hover {
+  background: rgba(116, 230, 234, 0.06);
+  color: var(--ink);
+}
+
+.nav-button.active {
+  color: var(--ocean-500);
+  background: rgba(53, 200, 212, 0.13);
+  box-shadow: inset 0 0 0 1px rgba(116, 230, 234, 0.1);
+}
+
+.main {
+  width: min(100%, 1320px);
+  margin: 0 auto;
+  padding: 28px clamp(22px, 3vw, 42px) 104px;
+}
+
+.topbar {
+  top: 0;
+  z-index: 10;
+  margin: -28px calc(clamp(22px, 3vw, 42px) * -1) 18px;
+  padding: 26px clamp(22px, 3vw, 42px) 18px;
+  background: linear-gradient(180deg, rgba(7, 29, 38, 0.94) 76%, rgba(7, 29, 38, 0));
+  backdrop-filter: blur(16px);
+}
+
+.active-patient-control {
+  min-height: 54px;
+  border-radius: 16px;
+  padding: 8px 12px;
+  background: rgba(4, 23, 31, 0.78);
+  border: 1px solid rgba(116, 230, 234, 0.18);
+}
+
+.active-patient-control span {
+  color: var(--ocean-500);
+  font-size: 10px;
+  letter-spacing: 0.11em;
+}
+
+.active-patient-control select {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.session-logout {
+  color: var(--ocean-500);
+  background: transparent;
+  border: 0;
+}
+
+.panel,
+.metric,
+.drawer,
+.form-card,
+.plan-section,
+.toolkit-card,
+.builder-tile,
+.builder-column,
+.chooser-dialog,
+.patient-row,
+.appointment-row,
+.record-row,
+.message-row,
+.lesson-row,
+.list li,
+.plate-percent-grid,
+.plate-editor-preview,
+.plate-mini-preview,
+.plate-legend span {
+  position: relative;
+  border-radius: 20px;
+  background: rgba(8, 39, 52, 0.82);
+  border: 1px solid rgba(116, 230, 234, 0.16);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(14px);
+}
+
+.panel {
+  padding: 22px;
+}
+
+.dashboard-home,
+.patient-profile-page,
+.pro-plan-page,
+.meal-editor-page,
+.grid {
+  gap: 18px;
+}
+
+.dashboard-card {
+  min-height: 244px;
+}
+
+.dashboard-patients,
+.today-panel,
+.appointment-card {
+  background:
+    radial-gradient(circle at top right, rgba(116, 230, 234, 0.14), transparent 38%),
+    rgba(13, 72, 86, 0.74);
+}
+
+.appointment-row,
+.patient-row,
+.record-row,
+.message-row,
+.lesson-row {
+  border-radius: 16px;
+  background: rgba(4, 23, 31, 0.52);
+  box-shadow: none;
+}
+
+.appointment-row.active,
+.patient-row.active,
+.builder-tile.has-selection {
+  border-color: var(--active-line);
+  box-shadow: 0 12px 30px rgba(53, 200, 212, 0.09), inset 4px 0 0 rgba(116, 230, 234, 0.65);
+}
+
+.avatar {
+  background: linear-gradient(135deg, rgba(53, 200, 212, 0.22), rgba(116, 230, 234, 0.08));
+  color: var(--ocean-500);
+  box-shadow: inset 0 0 0 1px rgba(116, 230, 234, 0.16);
+}
+
+.empty {
+  position: relative;
+  border-radius: 18px;
+  border: 1px dashed rgba(116, 230, 234, 0.24);
+  background:
+    radial-gradient(circle at top left, rgba(53, 200, 212, 0.08), transparent 36%),
+    rgba(4, 23, 31, 0.45);
+  color: var(--muted);
+}
+
+.empty::before {
+  content: "✦";
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  border-radius: 10px;
+  color: var(--ocean-500);
+  background: rgba(53, 200, 212, 0.12);
+}
+
+.metric {
+  min-height: 118px;
+  padding: 16px;
+}
+
+.metric-value {
+  color: var(--ink);
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.metric-note {
+  color: var(--ocean-500);
+}
+
+.status-pill,
+.small-pill,
+.tag,
+.pill-picker span {
+  border-radius: 999px;
+  background: rgba(53, 200, 212, 0.12);
+  border: 1px solid rgba(116, 230, 234, 0.18);
+  color: var(--ocean-500);
+}
+
+.status-pill.ok {
+  background: rgba(94, 230, 168, 0.12);
+  color: var(--ok);
+}
+
+.status-pill.warn {
+  background: rgba(255, 212, 138, 0.12);
+  color: var(--warn);
+}
+
+.meal-card {
+  border-radius: 22px;
+  min-height: 318px;
+  background: rgba(8, 39, 52, 0.82);
+}
+
+.meal-card:hover .meal-art {
+  filter: saturate(1.08) contrast(1.04);
+}
+
+.meal-art {
+  min-height: 144px;
+}
+
+.meal-card-body {
+  padding: 16px;
+}
+
+.meal-actions .btn {
+  min-height: 40px;
+}
+
+.plan-section {
+  overflow: hidden;
+}
+
+.plan-section summary {
+  min-height: 62px;
+  padding: 16px 18px;
+}
+
+.plan-section summary::after,
+.builder-column > summary::after {
+  border: 1px solid rgba(116, 230, 234, 0.18);
+  background: rgba(53, 200, 212, 0.12);
+  color: var(--ocean-500);
+}
+
+.selector-section-title {
+  color: var(--ocean-500);
+}
+
+.check-row {
+  min-height: 36px;
+  border-radius: 12px;
+}
+
+.chart {
+  padding: 12px;
+  border: 1px solid rgba(116, 230, 234, 0.12);
+  border-radius: 18px;
+  background: rgba(4, 23, 31, 0.32);
+}
+
+.bar {
+  background: linear-gradient(180deg, #74e6ea, #35c8d4 62%, #155e72);
+  box-shadow: 0 10px 20px rgba(53, 200, 212, 0.16);
+}
+
+.toast {
+  right: 22px;
+  bottom: 22px;
+  border-radius: 18px;
+  background: rgba(8, 39, 52, 0.96);
+  border: 1px solid rgba(116, 230, 234, 0.24);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(16px);
+}
+
+.mobile-nav {
+  border-top: 1px solid rgba(116, 230, 234, 0.14);
+  background: rgba(5, 24, 33, 0.92);
+  backdrop-filter: blur(16px);
+}
+
+.mobile-nav button {
+  border-radius: 14px;
+  color: var(--soft);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.mobile-nav button.active {
+  background: rgba(53, 200, 212, 0.14);
+  color: var(--ocean-500);
+}
+
+.mobile-nav span {
+  font-size: 19px;
+}
+
+@media (max-width: 1040px) {
+  .login-brand-panel {
+    min-height: 172px;
+  }
+
+  .main {
+    width: 100%;
+    padding: 14px 14px 112px;
+  }
+
+  .topbar {
+    margin: -14px -14px 14px;
+    padding: 14px 14px 12px;
+  }
+
+  .mobile-brand img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .mobile-nav {
+    left: 10px;
+    right: 10px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 4px;
+    padding: 7px;
+    border: 1px solid rgba(116, 230, 234, 0.14);
+    border-radius: 22px;
+    box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.32);
+  }
+
+  .mobile-nav button {
+    min-height: 54px;
+  }
+}
+
+@media (max-width: 540px) {
+  .login-shell {
+    align-content: start;
+  }
+
+  .login-brand-panel {
+    min-height: 172px;
+    padding: 22px 24px;
+  }
+
+  .login-form-panel {
+    place-items: start center;
+    padding: 16px 10px 32px;
+  }
+
+  .login-box {
+    border-radius: 22px;
+    padding: 20px 14px;
+  }
+
+  .login-role-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .login-role-card {
+    min-height: 114px;
+    padding: 13px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  .panel {
+    border-radius: 20px;
+    padding: 16px;
+  }
+
+  .dashboard-home {
+    gap: 14px;
+  }
+
+  .topbar-actions {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .session-logout {
+    min-width: 86px;
+    padding: 0 4px;
+    font-size: 11px;
+  }
+
+  .meal-card {
+    min-height: 170px;
+    border-radius: 20px;
+    grid-template-columns: 118px minmax(0, 1fr);
+  }
+}
