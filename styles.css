@@ -3269,6 +3269,15 @@ html[data-theme="light"] .sidebar {
   border-color: rgba(21, 94, 114, 0.12);
 }
 
+html[data-theme="light"] .login-brand-copy h1 {
+  color: var(--ink);
+}
+
+html[data-theme="light"] .login-brand-copy .eyebrow,
+html[data-theme="light"] .login-brand-copy p {
+  color: var(--muted);
+}
+
 html[data-theme="light"] .login-form-panel {
   background:
     radial-gradient(circle at bottom left, rgba(53, 200, 212, 0.18), transparent 34%),
