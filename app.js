@@ -101,6 +101,7 @@ function emptyPatient(seed = {}) {
     appointmentDate: seed.appointmentDate || "",
     appointmentTime: seed.appointmentTime || "",
     status: seed.status || "En seguimiento",
+    inactive: Boolean(seed.inactive),
     weight: seed.weight || "",
     targetWeight: seed.targetWeight || "",
     height: seed.height || "",
@@ -412,7 +413,7 @@ function renderPatientSelect(patient) {
       <span>Paciente</span>
       <select data-patient-select aria-label="Paciente activo">
         <option value="" ${patient ? "" : "selected"}>Seleccionar paciente</option>
-        ${state.patients.map(item => `<option value="${h(item.id)}" ${item.id === patient?.id ? "selected" : ""}>${h(item.name)}</option>`).join("")}
+        ${state.patients.map(item => `<option value="${h(item.id)}" ${item.id === patient?.id ? "selected" : ""}>${h(item.name)}${item.inactive ? " (inactivo)" : ""}</option>`).join("")}
       </select>
     </label>
   `;
@@ -529,7 +530,9 @@ function renderNoSelectedPatient(title) {
 
 function renderProHome() {
   const patient = currentPatient();
-  const appointments = state.patients.filter(item => item.appointmentDate || item.appointmentTime);
+  const activePatients = state.patients.filter(item => !item.inactive);
+  const inactivePatients = state.patients.length - activePatients.length;
+  const appointments = state.patients.filter(item => !item.inactive && (item.appointmentDate || item.appointmentTime));
   return `
     <section class="dashboard-home">
       <div class="panel dashboard-card dashboard-agenda">
@@ -557,11 +560,12 @@ function renderProHome() {
         <div class="section-heading">
           <div>
             <p class="eyebrow">Pacientes</p>
-            <h2>${state.patients.length} ${state.patients.length === 1 ? "paciente cargado" : "pacientes cargados"}</h2>
-            <p>${patient ? `${h(patient.name)} esta seleccionado.` : "Crea o selecciona un paciente para comenzar."}</p>
+            <h2>${activePatients.length} ${activePatients.length === 1 ? "paciente activo" : "pacientes activos"}</h2>
+            <p>${patient ? `${h(patient.name)} esta seleccionado${patient.inactive ? " como inactivo" : ""}.` : "Crea o selecciona un paciente para comenzar."}</p>
           </div>
         </div>
         ${state.patients.length ? "" : `<div class="empty compact-empty">Todavia no hay pacientes cargados.</div>`}
+        ${inactivePatients ? `<div class="status-summary">${inactivePatients} ${inactivePatients === 1 ? "paciente inactivo conservado" : "pacientes inactivos conservados"}.</div>` : ""}
         <div class="dashboard-actions">
           <button class="btn primary" type="button" data-open-modal="new-patient">Nuevo paciente</button>
           <button class="btn" type="button" data-nav="patients">Ver pacientes</button>
@@ -595,7 +599,7 @@ function renderPatients() {
         <div class="section-heading">
           <div>
             <p class="eyebrow">Ficha del paciente</p>
-            <h2>${h(patient.name)}</h2>
+            <h2>${h(patient.name)} ${patient.inactive ? `<span class="status-pill warn">Inactivo</span>` : ""}</h2>
             <p>Datos personales, agenda y seguimiento clínico.</p>
           </div>
           <button class="btn" type="button" data-open-modal="personal-data">Editar datos</button>
@@ -651,6 +655,18 @@ function renderPatients() {
           <button class="btn primary" data-nav="plan">Editar plan</button>
           <button class="btn" data-nav="records">Ver registros</button>
           <button class="btn" data-nav="measurements">Mediciones</button>
+        </div>
+      </div>
+
+      <div class="panel patient-status-panel">
+        <div>
+          <p class="eyebrow">Estado de la ficha</p>
+          <h3>${patient.inactive ? "Paciente inactivo" : "Paciente activo"}</h3>
+          <p class="lead">${patient.inactive ? "La ficha queda guardada con plan, registros y mediciones, pero no aparece en turnos activos." : "Si deja de atenderse, pasalo a inactivo para conservar todo su historial sin borrarlo."}</p>
+        </div>
+        <div class="patient-status-actions">
+          <button class="btn" type="button" data-toggle-patient-status="${h(patient.id)}">${patient.inactive ? "Reactivar paciente" : "Marcar inactivo"}</button>
+          <button class="btn danger" type="button" data-open-modal="delete-patient">Eliminar paciente</button>
         </div>
       </div>
 
@@ -726,6 +742,16 @@ function renderPatients() {
           </label>
           <div class="form-actions full">
             <button class="btn primary" type="submit">Guardar seguimiento</button>
+          </div>
+        </form>
+      `)}
+
+      ${renderAppModal("delete-patient", "Eliminar paciente", `
+        <form class="delete-confirm" data-delete-patient-form>
+          <p class="lead">Esta accion elimina la ficha de ${h(patient.name)} junto con su plan, mediciones y registros guardados en esta version local.</p>
+          <div class="form-actions">
+            <button class="btn ghost" type="button" data-close-modal>Cancelar</button>
+            <button class="btn danger" type="submit">Eliminar definitivamente</button>
           </div>
         </form>
       `)}
@@ -1668,6 +1694,38 @@ function showToast(message) {
 }
 
 function bindPatientForms() {
+  document.querySelectorAll("[data-toggle-patient-status]").forEach(button => {
+    button.addEventListener("click", () => {
+      const patientId = button.dataset.togglePatientStatus;
+      const target = state.patients.find(patient => patient.id === patientId);
+      updatePatient(patientId, patient => ({ ...patient, inactive: !patient.inactive }));
+      showToast(target?.inactive ? "Se reactivo el paciente." : "El paciente quedo inactivo y conserva su historial.");
+    });
+  });
+
+  const deleteForm = document.querySelector("[data-delete-patient-form]");
+  if (deleteForm) {
+    deleteForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const patient = currentPatient();
+      if (!patient) return;
+      const nextPatients = state.patients.filter(item => item.id !== patient.id);
+      const nextPlans = { ...state.plansByPatient };
+      delete nextPlans[patient.id];
+      state = {
+        ...state,
+        patients: nextPatients,
+        plansByPatient: nextPlans,
+        selectedPatientId: nextPatients[0]?.id || "",
+        section: nextPatients.length ? state.section : "patients",
+        detail: null
+      };
+      saveState();
+      render();
+      showToast("Se elimino el paciente.");
+    });
+  }
+
   const newForm = document.querySelector("[data-new-patient-form]");
   if (newForm) {
     newForm.addEventListener("submit", event => {
