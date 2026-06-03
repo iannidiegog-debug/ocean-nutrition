@@ -1,5 +1,6 @@
 const STORAGE_KEY = "ocean-nutrition-mvp-v18";
 const STORAGE_PREFIX = "ocean-nutrition-mvp-";
+const THEME_KEY = "ocean-nutrition-theme";
 
 const breakfastBuilderGroups = [
   { key: "infusiones", title: "Infusiones", quantityLabel: "Cantidad / frecuencia", items: ["Mate", "Mate cocido", "Te", "Cafe", "Malta"] },
@@ -90,6 +91,9 @@ let state = loadState();
 let sessionRole = null;
 let pendingLoginRole = "patient";
 let navigationHistory = [];
+let colorTheme = loadTheme();
+
+applyTheme();
 
 function emptyPatient(seed = {}) {
   return {
@@ -189,6 +193,27 @@ function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function loadTheme() {
+  try {
+    return localStorage.getItem(THEME_KEY) || "dark";
+  } catch {
+    return "dark";
+  }
+}
+
+function applyTheme() {
+  document.documentElement.dataset.theme = colorTheme;
+}
+
+function toggleTheme() {
+  colorTheme = colorTheme === "dark" ? "light" : "dark";
+  try {
+    localStorage.setItem(THEME_KEY, colorTheme);
+  } catch {}
+  applyTheme();
+  render();
+}
+
 function setState(patch) {
   state = { ...state, ...patch };
   saveState();
@@ -270,6 +295,7 @@ function navItems() {
 }
 
 function render() {
+  applyTheme();
   if (!sessionRole) {
     document.querySelector("#app").innerHTML = renderLogin();
     bindLoginEvents();
@@ -308,7 +334,10 @@ function renderLogin() {
       </section>
       <section class="login-form-panel">
         <div class="login-box">
-          <p class="eyebrow">Acceso a Ocean</p>
+          <div class="login-box-head">
+            <p class="eyebrow">Acceso a Ocean</p>
+            ${renderThemeToggle()}
+          </div>
           <h2>Iniciar sesion</h2>
           <p class="lead">Selecciona tu tipo de acceso para ingresar a tu espacio.</p>
           <div class="login-role-grid" role="group" aria-label="Tipo de acceso">
@@ -401,9 +430,20 @@ function renderTopbar() {
       </div>
       <div class="toolbar topbar-actions">
         ${state.role === "pro" ? renderPatientSelect(patient) : `<span class="small-pill">${h(patient?.goal || "Perfil pendiente")}</span>`}
+        ${renderThemeToggle()}
         <button class="session-logout" type="button" data-logout>Cerrar sesion</button>
       </div>
     </header>
+  `;
+}
+
+function renderThemeToggle() {
+  const isLight = colorTheme === "light";
+  return `
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Cambiar a modo ${isLight ? "oscuro" : "claro"}">
+      <span>${isLight ? "◐" : "☼"}</span>
+      <strong>${isLight ? "Oscuro" : "Claro"}</strong>
+    </button>
   `;
 }
 
@@ -1473,6 +1513,8 @@ function measurementRow(item) {
 }
 
 function bindEvents() {
+  bindThemeToggles();
+
   document.querySelectorAll("[data-nav]").forEach(button => {
     button.addEventListener("click", () => navigateTo(button.dataset.nav));
   });
@@ -1512,6 +1554,8 @@ function bindEvents() {
 }
 
 function bindLoginEvents() {
+  bindThemeToggles();
+
   document.querySelectorAll("[data-login-role]").forEach(button => {
     button.addEventListener("click", () => {
       pendingLoginRole = button.dataset.loginRole;
@@ -1526,6 +1570,12 @@ function bindLoginEvents() {
     sessionRole = pendingLoginRole;
     navigationHistory = [];
     setState({ role: sessionRole, section: "home", detail: null });
+  });
+}
+
+function bindThemeToggles() {
+  document.querySelectorAll("[data-theme-toggle]").forEach(button => {
+    button.addEventListener("click", toggleTheme);
   });
 }
 

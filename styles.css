@@ -3187,3 +3187,209 @@ h3 {
     grid-template-columns: 118px minmax(0, 1fr);
   }
 }
+
+/* Theme toggle and light mode */
+.brand img,
+.login-brand img,
+.mobile-brand img {
+  object-fit: contain;
+  padding: 4px;
+}
+
+.login-box-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.theme-toggle {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(116, 230, 234, 0.18);
+  border-radius: 999px;
+  background: rgba(244, 251, 252, 0.045);
+  color: var(--ocean-500);
+  padding: 7px 11px;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: none;
+}
+
+.theme-toggle span {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(53, 200, 212, 0.14);
+}
+
+.theme-toggle:hover,
+.theme-toggle:active {
+  transform: translateY(-1px);
+  border-color: rgba(116, 230, 234, 0.42);
+}
+
+html[data-theme="light"] {
+  --ink: #102a33;
+  --muted: #4f6f79;
+  --soft: #73919a;
+  --line: rgba(21, 94, 114, 0.16);
+  --active-line: rgba(21, 94, 114, 0.38);
+  --page: #eaf6f8;
+  --surface: rgba(255, 255, 255, 0.86);
+  --surface-strong: rgba(231, 249, 251, 0.94);
+  --shadow: 0 18px 45px rgba(13, 72, 86, 0.13);
+}
+
+html[data-theme="light"] body {
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(53, 200, 212, 0.28), transparent 32%),
+    radial-gradient(circle at 88% 18%, rgba(116, 230, 234, 0.24), transparent 28%),
+    linear-gradient(180deg, #f4fbfc 0%, #e9f6f8 48%, #dceff3 100%);
+}
+
+html[data-theme="light"] body::before {
+  background:
+    linear-gradient(rgba(21, 94, 114, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(21, 94, 114, 0.03) 1px, transparent 1px);
+}
+
+html[data-theme="light"] .login-brand-panel,
+html[data-theme="light"] .sidebar {
+  background:
+    radial-gradient(circle at top left, rgba(53, 200, 212, 0.24), transparent 34%),
+    linear-gradient(180deg, rgba(244, 251, 252, 0.94), rgba(214, 239, 244, 0.92));
+  color: var(--ink);
+  border-color: rgba(21, 94, 114, 0.12);
+}
+
+html[data-theme="light"] .login-form-panel {
+  background:
+    radial-gradient(circle at bottom left, rgba(53, 200, 212, 0.18), transparent 34%),
+    rgba(234, 246, 248, 0.72);
+}
+
+html[data-theme="light"] .login-box,
+html[data-theme="light"] .panel,
+html[data-theme="light"] .metric,
+html[data-theme="light"] .drawer,
+html[data-theme="light"] .form-card,
+html[data-theme="light"] .plan-section,
+html[data-theme="light"] .toolkit-card,
+html[data-theme="light"] .builder-tile,
+html[data-theme="light"] .builder-column,
+html[data-theme="light"] .chooser-dialog,
+html[data-theme="light"] .patient-row,
+html[data-theme="light"] .appointment-row,
+html[data-theme="light"] .record-row,
+html[data-theme="light"] .message-row,
+html[data-theme="light"] .lesson-row,
+html[data-theme="light"] .list li,
+html[data-theme="light"] .plate-percent-grid,
+html[data-theme="light"] .plate-editor-preview,
+html[data-theme="light"] .plate-mini-preview,
+html[data-theme="light"] .plate-legend span {
+  background: rgba(255, 255, 255, 0.84);
+  border-color: rgba(21, 94, 114, 0.14);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+html[data-theme="light"] .dashboard-patients,
+html[data-theme="light"] .today-panel,
+html[data-theme="light"] .appointment-card {
+  background:
+    radial-gradient(circle at top right, rgba(53, 200, 212, 0.22), transparent 40%),
+    rgba(231, 249, 251, 0.9);
+}
+
+html[data-theme="light"] .topbar {
+  background: linear-gradient(180deg, rgba(234, 246, 248, 0.92) 76%, rgba(234, 246, 248, 0));
+}
+
+html[data-theme="light"] .field input,
+html[data-theme="light"] .field textarea,
+html[data-theme="light"] .field select,
+html[data-theme="light"] .active-patient-control,
+html[data-theme="light"] .login-role-card,
+html[data-theme="light"] .empty,
+html[data-theme="light"] .check-row {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(21, 94, 114, 0.16);
+  color: var(--ink);
+}
+
+html[data-theme="light"] .login-role-card.active {
+  background:
+    radial-gradient(circle at top left, rgba(53, 200, 212, 0.24), transparent 44%),
+    rgba(229, 248, 251, 0.94);
+  border-color: rgba(21, 94, 114, 0.32);
+}
+
+html[data-theme="light"] .btn {
+  background: rgba(21, 94, 114, 0.055);
+  border-color: rgba(21, 94, 114, 0.16);
+  color: var(--ocean-700);
+}
+
+html[data-theme="light"] .btn.primary {
+  background: linear-gradient(135deg, #35c8d4 0%, #74e6ea 100%);
+  color: #06202b;
+}
+
+html[data-theme="light"] .empty {
+  background:
+    radial-gradient(circle at top left, rgba(53, 200, 212, 0.1), transparent 36%),
+    rgba(255, 255, 255, 0.58);
+}
+
+html[data-theme="light"] .mobile-nav {
+  background: rgba(244, 251, 252, 0.88);
+  border-color: rgba(21, 94, 114, 0.14);
+}
+
+html[data-theme="light"] .mobile-nav button {
+  color: var(--soft);
+}
+
+html[data-theme="light"] .mobile-nav button.active {
+  background: rgba(53, 200, 212, 0.18);
+  color: var(--ocean-700);
+}
+
+html[data-theme="light"] .theme-toggle {
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ocean-700);
+  border-color: rgba(21, 94, 114, 0.16);
+}
+
+@media (max-width: 1040px) {
+  .topbar-actions {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+}
+
+@media (max-width: 540px) {
+  .theme-toggle {
+    min-width: 44px;
+    padding: 7px 9px;
+  }
+
+  .theme-toggle strong {
+    display: none;
+  }
+
+  .topbar-actions {
+    gap: 7px;
+  }
+
+  .session-logout {
+    min-width: 78px;
+  }
+}
