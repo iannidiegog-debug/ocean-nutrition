@@ -2003,6 +2003,14 @@ button.metric {
     grid-template-columns: 1fr;
   }
 
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
   .login-brand-panel {
     min-height: auto;
     padding: 24px;
@@ -3065,6 +3073,14 @@ h3 {
 @media (max-width: 1040px) {
   .login-shell {
     grid-template-columns: 1fr;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: none;
   }
 
   .login-brand-panel {
